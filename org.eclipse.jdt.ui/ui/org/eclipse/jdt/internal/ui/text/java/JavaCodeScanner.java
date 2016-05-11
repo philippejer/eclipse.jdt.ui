@@ -374,7 +374,8 @@ public final class JavaCodeScanner extends AbstractJavaScanner {
 
 	private static final String SOURCE_VERSION= JavaCore.COMPILER_SOURCE;
 
-	static String[] fgKeywords= {
+	static String[] fgKeywords= ExtensionsConfig.ENABLE ?
+	new String[] {
 		"abstract", //$NON-NLS-1$
 		"break", //$NON-NLS-1$
 		"case", "catch", "class", "const", "continue", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
@@ -385,7 +386,23 @@ public final class JavaCodeScanner extends AbstractJavaScanner {
 		"if", "implements", "import", "instanceof", "interface", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
 		"native", "new", //$NON-NLS-2$ //$NON-NLS-1$
 		"package", "private", "protected", "public", //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
-		"static", "super", "switch", "synchronized", //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
+		"static", "struct", "super", "switch", "synchronized", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
+		"this", "throw", "throws", "transient", "try", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
+		"volatile", //$NON-NLS-1$
+		"while" //$NON-NLS-1$
+	}:
+	new String[] {
+		"abstract", //$NON-NLS-1$
+		"break", //$NON-NLS-1$
+		"case", "catch", "class", "const", "continue", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
+		"default", "do", //$NON-NLS-2$ //$NON-NLS-1$
+		"else", "extends", //$NON-NLS-2$ //$NON-NLS-1$
+		"final", "finally", "for", //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
+		"goto", //$NON-NLS-1$
+		"if", "implements", "import", "instanceof", "interface", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
+		"native", "new", //$NON-NLS-2$ //$NON-NLS-1$
+		"package", "private", "protected", "public", //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
+		"static", "struct", "super", "switch", "synchronized", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
 		"this", "throw", "throws", "transient", "try", //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
 		"volatile", //$NON-NLS-1$
 		"while" //$NON-NLS-1$
@@ -396,8 +413,8 @@ public final class JavaCodeScanner extends AbstractJavaScanner {
 	private static String[] fgJava14Keywords= { "assert" }; //$NON-NLS-1$
 	private static String[] fgJava15Keywords= { "enum" }; //$NON-NLS-1$
 
-	private static String[] fgTypes= ExtensionsConfig.ENABLE_VAR ?
-			new String[] { "void", "boolean", "char", "byte", "short", "strictfp", "int", "long", "float", "double", "var" } : //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
+	private static String[] fgTypes= ExtensionsConfig.ENABLE ?
+			new String[] { "void", "boolean", "char", "byte", "short", "strictfp", "int", "long", "float", "double", "var" }: //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 		    new String[] { "void", "boolean", "char", "byte", "short", "strictfp", "int", "long", "float", "double" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 
 	private static String[] fgConstants= { "false", "null", "true" }; //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
