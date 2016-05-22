@@ -103,6 +103,7 @@ public class ComplianceConfigurationBlock extends OptionsConfigurationBlock {
 	private static final Key PREF_SOURCE_FILE_ATTR= getJDTCoreKey(JavaCore.COMPILER_SOURCE_FILE_ATTR);
 	private static final Key PREF_CODEGEN_UNUSED_LOCAL= getJDTCoreKey(JavaCore.COMPILER_CODEGEN_UNUSED_LOCAL);
 	private static final Key PREF_CODEGEN_METHOD_PARAMETERS_ATTR= getJDTCoreKey(JavaCore.COMPILER_CODEGEN_METHOD_PARAMETERS_ATTR);
+	private static final Key PREF_EXTENSIONS_PUBLIC_BY_DEFAULT= getJDTCoreKey(JavaCore.COMPILER_EXTENSIONS_PUBLIC_BY_DEFAULT);
 	
 	// values
 	private static final String GENERATE= JavaCore.GENERATE;
@@ -207,7 +208,8 @@ public class ComplianceConfigurationBlock extends OptionsConfigurationBlock {
 		Key[] keys= new Key[] {
 				PREF_LOCAL_VARIABLE_ATTR, PREF_LINE_NUMBER_ATTR, PREF_SOURCE_FILE_ATTR, PREF_CODEGEN_UNUSED_LOCAL, PREF_CODEGEN_INLINE_JSR_BYTECODE, INTR_DEFAULT_COMPLIANCE,
 				PREF_COMPLIANCE, PREF_SOURCE_COMPATIBILITY,
-				PREF_CODEGEN_TARGET_PLATFORM, PREF_PB_ASSERT_AS_IDENTIFIER, PREF_PB_ENUM_AS_IDENTIFIER, PREF_CODEGEN_METHOD_PARAMETERS_ATTR
+				PREF_CODEGEN_TARGET_PLATFORM, PREF_PB_ASSERT_AS_IDENTIFIER, PREF_PB_ENUM_AS_IDENTIFIER, PREF_CODEGEN_METHOD_PARAMETERS_ATTR,
+				PREF_EXTENSIONS_PUBLIC_BY_DEFAULT
 			};
 		
 		if (projectSpecific) {
@@ -405,6 +407,9 @@ public class ComplianceConfigurationBlock extends OptionsConfigurationBlock {
 		
 		label= PreferencesMessages.ComplianceConfigurationBlock_codegen_method_parameters_attr;
 		addCheckBox(group, label, PREF_CODEGEN_METHOD_PARAMETERS_ATTR, generateValues, 0);
+
+		label= "Public by default"; //$NON-NLS-1$
+		addCheckBox(group, label, PREF_EXTENSIONS_PUBLIC_BY_DEFAULT, new String[] { ENABLED, DISABLED }, 0);
 		
 		Composite infoComposite= new Composite(fControlsComposite, SWT.NONE);
 		infoComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
