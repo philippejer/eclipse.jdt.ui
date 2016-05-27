@@ -407,6 +407,12 @@ public class ComplianceConfigurationBlock extends OptionsConfigurationBlock {
 		
 		label= PreferencesMessages.ComplianceConfigurationBlock_codegen_method_parameters_attr;
 		addCheckBox(group, label, PREF_CODEGEN_METHOD_PARAMETERS_ATTR, generateValues, 0);
+		
+		group= new Group(fControlsComposite, SWT.NONE);
+		group.setFont(fControlsComposite.getFont());
+		group.setText("Compiler extensions"); //$NON-NLS-1$
+		group.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+		group.setLayout(layout);
 
 		label= "Public by default"; //$NON-NLS-1$
 		addCheckBox(group, label, PREF_EXTENSIONS_PUBLIC_BY_DEFAULT, new String[] { ENABLED, DISABLED }, 0);
