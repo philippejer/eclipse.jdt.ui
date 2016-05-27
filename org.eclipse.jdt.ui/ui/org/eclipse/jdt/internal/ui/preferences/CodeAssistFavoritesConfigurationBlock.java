@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.ui.preferences;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -123,7 +124,7 @@ class CodeAssistFavoritesConfigurationBlock extends OptionsConfigurationBlock {
 			fNameDialogField.setLabelText(label);
 			fNameDialogField.setButtonLabel(PreferencesMessages.FavoriteStaticMemberInputDialog_browse_button);
 			fNameDialogField.setDialogFieldListener(adapter);
-			fNameDialogField.setText(""); //$NON-NLS-1$
+			fNameDialogField.setText(""); //$NON-NLS-1$			
 		}
 
 		/*
@@ -143,11 +144,16 @@ class CodeAssistFavoritesConfigurationBlock extends OptionsConfigurationBlock {
 				fNameDialogField.setText(editedEntry);
 		}
 
-		public String getResult() {
-			String val= fNameDialogField.getText();
-			if (!fIsEditingMember)
-				val= val + WILDCARD;
-			return val;
+		public List<String> getResult() {
+			List<String> result = new ArrayList<>();
+			String[] vals = fNameDialogField.getText().split(","); //$NON-NLS-1$			
+			for (int i = 0; i < vals.length; i++) {
+				String val = vals[i].trim();
+				if (!fIsEditingMember)
+					val= val + WILDCARD;
+				result.add(val);
+			}
+			return result;
 		}
 
 		@Override
@@ -186,12 +192,22 @@ class CodeAssistFavoritesConfigurationBlock extends OptionsConfigurationBlock {
 			IJavaSearchScope scope= SearchEngine.createWorkspaceScope();
 			int style= IJavaElementSearchConstants.CONSIDER_ALL_TYPES;
 			try {
-				SelectionDialog dialog= JavaUI.createTypeDialog(getShell(), context, scope, style, false, fNameDialogField.getText());
+				SelectionDialog dialog= JavaUI.createTypeDialog(getShell(), context, scope, style, true, fNameDialogField.getText());
 				dialog.setTitle(PreferencesMessages.FavoriteStaticMemberInputDialog_ChooseTypeDialog_title);
 				dialog.setMessage(PreferencesMessages.FavoriteStaticMemberInputDialog_ChooseTypeDialog_description);
 				if (dialog.open() == Window.OK) {
-					IType res= (IType) dialog.getResult()[0];
-					fNameDialogField.setText(res.getFullyQualifiedName('.'));
+					Object[] result = dialog.getResult();
+					if (result.length > 0) {
+						String nameText = ""; //$NON-NLS-1$
+						for (int i = 0; i < result.length; i++) {
+							String name = ((IType) result[i]).getFullyQualifiedName('.');
+							if (i > 0) nameText += ", "; //$NON-NLS-1$
+							nameText += name;
+						}
+						fNameDialogField.setText(nameText);
+					} else {
+						fNameDialogField.setText(""); //$NON-NLS-1$
+					}
 				}
 			} catch (JavaModelException e) {
 				ExceptionHandler.handle(e, getShell(), PreferencesMessages.FavoriteStaticMemberInputDialog_ChooseTypeDialog_title, PreferencesMessages.FavoriteStaticMemberInputDialog_ChooseTypeDialog_error_message);
@@ -200,19 +216,25 @@ class CodeAssistFavoritesConfigurationBlock extends OptionsConfigurationBlock {
 
 		private void doValidation() {
 			StatusInfo status= new StatusInfo();
-			String newText= fNameDialogField.getText();
-			if (newText.length() == 0) {
-				status.setError(""); //$NON-NLS-1$
-			} else {
-				IStatus val= JavaConventions.validateJavaTypeName(newText, JavaCore.VERSION_1_3, JavaCore.VERSION_1_3);
-				if (val.matches(IStatus.ERROR)) {
-					if (fIsEditingMember)
-						status.setError(PreferencesMessages.FavoriteStaticMemberInputDialog_error_invalidMemberName);
-					else
-						status.setError(PreferencesMessages.FavoriteStaticMemberInputDialog_error_invalidTypeName);
+			String[] newTexts = fNameDialogField.getText().split(","); //$NON-NLS-1$
+			for (int i = 0; i < newTexts.length; i++) {
+				String newText = newTexts[i].trim();
+				if (newText.length() == 0) {
+					status.setError(""); //$NON-NLS-1$
 				} else {
-					if (doesExist(newText)) {
-						status.setError(PreferencesMessages.FavoriteStaticMemberInputDialog_error_entryExists);
+					IStatus val= JavaConventions.validateJavaTypeName(newText, JavaCore.VERSION_1_3, JavaCore.VERSION_1_3);
+					if (val.matches(IStatus.ERROR)) {
+						if (fIsEditingMember)
+							status.setError(PreferencesMessages.FavoriteStaticMemberInputDialog_error_invalidMemberName);
+						else
+							status.setError(PreferencesMessages.FavoriteStaticMemberInputDialog_error_invalidTypeName);
+						break;
+					} else {
+						// will get filtered by caller and does not work anyway since it's missing the wildcard??
+//						if (doesExist(newText)) {
+//							status.setError(PreferencesMessages.FavoriteStaticMemberInputDialog_error_entryExists);
+//							break;
+//						}
 					}
 				}
 			}
@@ -431,7 +453,7 @@ class CodeAssistFavoritesConfigurationBlock extends OptionsConfigurationBlock {
 			List<String> existing= fList.getElements();
 			FavoriteStaticMemberInputDialog dialog= new FavoriteStaticMemberInputDialog(getShell(), existing, index == IDX_NEW_MEMBER, true);
 			if (dialog.open() == Window.OK) {
-				fList.addElement(dialog.getResult());
+				fList.addElements(dialog.getResult());
 			}
 		} else if (index == IDX_EDIT) { // edit
 			List<String> selected= fList.getSelectedElements();
@@ -450,7 +472,7 @@ class CodeAssistFavoritesConfigurationBlock extends OptionsConfigurationBlock {
 				dialog.setInitialSelection(editedEntry);
 
 			if (dialog.open() == Window.OK) {
-				fList.replaceElement(editedEntry, dialog.getResult());
+				fList.replaceElement(editedEntry, dialog.getResult().get(0));
 			}
 		}
 	}

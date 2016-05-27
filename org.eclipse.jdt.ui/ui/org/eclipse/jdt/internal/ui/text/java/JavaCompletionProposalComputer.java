@@ -40,6 +40,7 @@ import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.CompletionRequestor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.extensions.ExtensionsConfig;
 
 import org.eclipse.jdt.internal.corext.util.Messages;
 
@@ -125,7 +126,7 @@ public class JavaCompletionProposalComputer implements IJavaCompletionProposalCo
 		}
 	}
 
-	private static final long JAVA_CODE_ASSIST_TIMEOUT= Long.getLong("org.eclipse.jdt.ui.codeAssistTimeout", 5000).longValue(); // ms //$NON-NLS-1$
+	private static final long JAVA_CODE_ASSIST_TIMEOUT= Long.getLong("org.eclipse.jdt.ui.codeAssistTimeout", ExtensionsConfig.Debug ? ExtensionsConfig.DebugCompletionTimeout : 5000).longValue(); // ms //$NON-NLS-1$
 
 	private String fErrorMessage;
 
