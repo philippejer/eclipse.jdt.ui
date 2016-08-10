@@ -264,7 +264,7 @@ public class LevelTreeContentProvider extends JavaSearchContentProvider implemen
 		for (Iterator<Object> elementsToUpdate= toUpdate.iterator(); elementsToUpdate.hasNext();) {
 			viewer.refresh(elementsToUpdate.next());
 		}
-
+		viewer.expandAll();
 	}
 
 	@Override
